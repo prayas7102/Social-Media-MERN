@@ -1,5 +1,7 @@
 const express = require('express');
+const {databaseConnect}= require('./config/database');
 const app = express();
+databaseConnect();
 if (process.env.NODE_ENV !== "production") {
     require("dotenv").config({ path: 'config/config.env' })
 }
