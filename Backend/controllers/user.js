@@ -1,9 +1,8 @@
-const User = require("../models/user");
+const User = require("../models/User");
 exports.register = async (req, res) => {
     try {
         const { name, email, password } = req.body;
         let user = await User.findOne({ email })
-        .then((user) => { console.log(user) })
         if (user) {
             return res.status(400).json({
                 success: false,
