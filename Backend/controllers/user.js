@@ -14,9 +14,52 @@ exports.register = async (req, res) => {
             avatar: { public_id: "sample_id", url: "sampleurl" }
         })
 
-        res.status(201).json({
+        const token = await user.generateToken();
+        const option={
+            expires: new Date(Date.now()+24*60*60*60),
+            httpOnly: true,
+        }
+        res.status(200).cookie("token", token, option).json({
             success: true,
-            user
+            user,
+            token,
+        });
+        
+    }
+    catch (error) {
+        res.status(500).json({
+            success: false,
+            message: error.message,
+        });
+    }
+}
+
+exports.login = async (req, res) => {
+    try {
+        const { email, password } = req.body;
+        const user = await User.findOne({ email });
+        if (!user) {
+            return res.status(400).json({ 
+                success: false, 
+                message: "User does not exist" 
+            });
+        }
+        const isMatch = await user.matchPassword(password);
+        if (!isMatch) {
+            return res.status(400).json({
+                success: false,
+                message: "Incorrect Password"
+            });
+        }
+        const token = await user.generateToken();
+        const option={
+            expires: new Date(Date.now()+24*60*60*60),
+            httpOnly: true,
+        }
+        res.status(200).cookie("token", token, option).json({
+            success: true,
+            user,
+            token,
         });
     }
     catch (error) {
