@@ -44,14 +44,14 @@ exports.login = async (req, res) => {
                 message: "User does not exist" 
             });
         }
-        const isMatch = await user.matchPassword(password);
+        const isMatch = await User.matchPassword(password);
         if (!isMatch) {
             return res.status(400).json({
                 success: false,
                 message: "Incorrect Password"
             });
         }
-        const token = await user.generateToken();
+        const token = await User.generateToken();
         const option={
             expires: new Date(Date.now()+24*60*60*60),
             httpOnly: true,
