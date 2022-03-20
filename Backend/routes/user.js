@@ -1,8 +1,10 @@
-const express = require("express")
+const express = require("express");
+const { addComment } = require("../controllers/post");
 const {
     register, login, followUser,
     logout, updateProfile, updatePassword,
-    deleteMyProfile, MyProfile, getAllUser, getUserProfile
+    deleteMyProfile, MyProfile, getAllUser, 
+    getUserProfile
 } = require("../controllers/user");
 const router = express.Router();
 const { isAuthenticated } = require('../middleware/auth');

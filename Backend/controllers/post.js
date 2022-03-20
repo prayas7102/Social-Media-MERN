@@ -165,6 +165,79 @@ exports.updateCaption = async (req, res) => {
         }
 }
     
+exports.addComment = async (req, res) => {
+    try{
+        const post=await Post.findById(req.params.id)
+        if(!post){
+            return res.status(404).json({
+                success: false,
+                message: "Post not found",
+            });
+        }
+        let commentExists=-1;
+        post.comments.forEach((element,index) => {
+            if(element.user.toString()===req.user._id.toString()){
+                commentExists=index;
+            }
+        });
+        if(commentExists!==-1){
+            post.comments[commentExists].comment=req.body.comment;
+            await post.save();
+            return res.status(200).json({
+                success: true,
+                message: "Comment added",
+            });
+        }
+        
+        else{
+            post.comments.push({
+                user: req.user._id,
+                comment: req.body.comment,
+            });
+            await post.save();
+            return res.status(200).json({
+                success: true,
+                message: "Comment added",
+            });
+        }
+        
+    }
+    catch (error) {
+        res.status(500).json({
+            success: false,
+            message: error.message,
+        });
+    }
+}
+
+exports.removeComment = async (req, res) => {
+    try{
+        const post=await Post.findById(req.params.id)
+        if(!post){
+            return res.status(404).json({
+                success: false,
+                message: "Post not found",
+            });
+        }
+        if(post.owner.toString()===req.user._id.toString()){
+            
+        }
+        else{
+            post.comments.forEach((item,key)=>{
+                if(item.user.toString()===req.user._id.toString()){
+                    
+                }
+            })
+        }
+    }
+    catch (error) {
+        res.status(500).json({
+            success: false,
+            message: error.message,
+        });
+    }
+}
+
 // exports.deletePost = async (req, res) => {
 //     try{
 
