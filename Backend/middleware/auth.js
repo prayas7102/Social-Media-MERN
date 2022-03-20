@@ -1,5 +1,5 @@
 const User = require("../models/User");
-const jwt = require('jsonwebtoken')
+const jwt = require('jsonwebtoken');
 exports.isAuthenticated = async (req, res, next) => {
     try {
         const { token } = req.cookies;
@@ -12,7 +12,10 @@ exports.isAuthenticated = async (req, res, next) => {
         req.user = await User.findById(decoded._id);
         next();
     }
-    catch {
-
+    catch (error) {
+        res.status(500).json({
+            success: false,
+            message: error.message,
+        });
     }
 }
