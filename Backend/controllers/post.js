@@ -122,6 +122,49 @@ exports.deletePost = async (req, res) => {
         });
     }
 }
+
+exports.getPost = async (req, res) => {
+    try{
+        const user=await User.findById(req.user._id).populate("following","posts");
+        return res.status(200).json({
+            success: true,
+            following: user.following,
+        });
+    }
+    catch (error) {
+        res.status(500).json({
+            success: false,
+            message: error.message,
+        });
+    }
+}
+
+exports.updateCaption = async (req, res) => {
+        try{
+            const post=await Post.findById(req.params._id);
+            if(!post){
+                return res.status(400).json({
+                    success: false,
+                    message: "post not found",
+                });
+            }
+            if(!post){
+                return res.status(400).json({
+                    success: false,
+                    message: "post not found",
+                });
+            }
+            post.caption=req.body.caption;
+            await post.save();
+        }
+        catch (error) {
+            res.status(500).json({
+                success: false,
+                message: error.message,
+            });
+        }
+}
+    
 // exports.deletePost = async (req, res) => {
 //     try{
 
