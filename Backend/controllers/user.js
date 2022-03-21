@@ -1,6 +1,6 @@
 const User = require("../models/User");
 const Post = require("../models/Post");
-const crypto=require("crypto");
+const crypto = require("crypto");
 const { sendEmail } = require("../middleware/sendMail");
 exports.register = async (req, res) => {
     try {
@@ -325,6 +325,35 @@ exports.forgotPassword = async (req, res) => {
             });
         }
 
+    }
+    catch (error) {
+       return res.status(500).json({
+            success: false,
+            message: error.message,
+        });
+    }
+}
+
+exports.resetPassword = async (req, res) => {
+    try {
+        const resetPasswordToken = crypto.createHash("abc").update(req.params.token).digest("hex");
+        const user = await User.findOne({ 
+            resetPasswordToken, 
+            resetPasswordExpire: { $gt: Date.now() } 
+        });
+        if(!user){
+            res.status(401).json({
+                success: false,
+                message: "invalid token",
+            });
+        }
+        user.resetPasswordToken = undefined;
+        user.resetPasswordExpire = undefined;
+        await user.save();
+        res.status(200).json({
+            success: true,
+            message: `Password updated`,
+        });
     }
     catch (error) {
         res.status(500).json({
