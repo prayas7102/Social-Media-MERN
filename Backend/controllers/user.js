@@ -1,6 +1,7 @@
 const User = require("../models/User");
 const Post = require("../models/Post");
-
+const crypto=require("crypto");
+const { sendEmail } = require("../middleware/sendMail");
 exports.register = async (req, res) => {
     try {
         const { name, email, password } = req.body;
@@ -200,6 +201,7 @@ exports.deleteMyProfile = async (req, res) => {
         const user = await User.findById(req.user._id);
         const posts = user.posts;
         const followers = user.followers;
+        const followings = user.following;
         await user.remove();
         res.cookie("token", null, {
             expires: new Date(Date.now()),
@@ -215,7 +217,6 @@ exports.deleteMyProfile = async (req, res) => {
             follower.following.splice(index, 1);
             await follower.save();
         }
-        const followings = user.following;
         for (let i = 0; i < followings.length; i++) {
             const following = await User.findById(followings[i]);
             const index = following.followers.indexOf(user._id)
@@ -255,8 +256,8 @@ exports.MyProfile = async (req, res) => {
 exports.getUserProfile = async (req, res) => {
     try {
         const user = await User.findById(req.params.id).populate("posts");
-        if(!user){
-            res.status(404).json({
+        if (!user) {
+            return res.status(404).json({
                 success: false,
                 message: "user not found",
             });
@@ -290,3 +291,45 @@ exports.getAllUser = async (req, res) => {
     }
 }
 
+exports.forgotPassword = async (req, res) => {
+    try {
+        const user = await User.findOne({ email: req.body.email });
+        if (!user) {
+            return res.status(404).json({
+                success: false,
+                message: "user not found",
+            });
+        }
+        const resetPassword = user.getResetPasswordToken();
+        await user.save();
+        const resetUrl = `${req.protocol}://${req.get("host")}/api/v1/password/reset/${resetPassword}`;
+        const message = `Reset Your Password by clicking on link below: \n\n ${resetUrl}`;
+        try {
+            await sendEmail({
+                email: user.email,
+                subject: "Resest Password",
+                message,
+            });
+            res.status(200).json({
+                success: true,
+                message: `Email sent to ${user.email}`,
+            });
+        }
+        catch (error) {
+            user.resetPasswordToken = undefined;
+            user.resetPasswordExpire = undefined;
+            await user.save();
+            res.status(500).json({
+                success: false,
+                message: error.message,
+            });
+        }
+
+    }
+    catch (error) {
+        res.status(500).json({
+            success: false,
+            message: error.message,
+        });
+    }
+}
