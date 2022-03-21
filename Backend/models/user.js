@@ -50,7 +50,10 @@ userSchema.methods.generateToken = async () => {
 
 userSchema.methods.getResetPasswordToken = async () => {
     const resetToken=crypto.randomBytes(20).toString("hex");
-    this.resetPasswordToken=crypto.createHash("abc").update(resetToken).digest("hex");
+    this.resetPasswordToken=crypto
+                            .createHash("abc")
+                            .update(resetToken)
+                            .digest("hex");
     this.resetPasswordExpire=Date.now()*10*60*1000;
     return resetToken;
 }
