@@ -7,6 +7,6 @@ app.listen(process.env.PORT, () => {
 // http://localhost:4000/api/v1/register
 // {
 //     "name" : "chutiya",
-//     "email" : "chutiya@gmail.com"
-//     "password" : "chu12345"
+    // "email" : "chutiya@gmail.com"
+    // "password" : "chu12345"
 // }

@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 const crypto=require("crypto");
+const jwt = require('jsonwebtoken');
 const userSchema = new mongoose.Schema({
     name: {
         type: String,
@@ -34,14 +35,13 @@ const userSchema = new mongoose.Schema({
 });
 userSchema.pre("save", async function (next) {
     if (this.isModified("password")) {
-        // console.log(this.password)
         this.password = await bcrypt.hash(this.password, 10);
     }
     next();
 });
 
-userSchema.methods.matchPassword = async (password) => {
-    return await bcrypt.compare(password, this.password);
+userSchema.methods.matchPassword = async (password,hash) => {
+    return await bcrypt.compare(password, hash);
 }
 
 userSchema.methods.generateToken = async () => {

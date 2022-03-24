@@ -16,7 +16,7 @@ exports.register = async (req, res) => {
             name, email, password,
             avatar: { public_id: "sample_id", url: "sampleurl" }
         })
-
+        await user.save();
         const token = await user.generateToken();
         const option = {
             expires: new Date(Date.now() + 24 * 60 * 60 * 60),
@@ -27,7 +27,6 @@ exports.register = async (req, res) => {
             user,
             token,
         });
-
     }
     catch (error) {
         res.status(500).json({
@@ -40,21 +39,21 @@ exports.register = async (req, res) => {
 exports.login = async (req, res) => {
     try {
         const { email, password } = req.body;
-        const user = await User.findOne({ email });
+        const user = await User.findOne({ email }).select("+password");
         if (!user) {
             return res.status(400).json({
                 success: false,
                 message: "User does not exist"
             });
         }
-        const isMatch = await User.matchPassword(password);
+        const isMatch = await user.matchPassword(password,user.password);
         if (!isMatch) {
             return res.status(400).json({
                 success: false,
                 message: "Incorrect Password"
             });
         }
-        const token = await User.generateToken();
+        const token = await user.generateToken();
         const option = {
             expires: new Date(Date.now() + 24 * 60 * 60 * 60),
             httpOnly: true,
@@ -64,6 +63,7 @@ exports.login = async (req, res) => {
             user,
             token,
         });
+        // console.log(res.cookie)
     }
     catch (error) {
         res.status(500).json({
@@ -85,6 +85,7 @@ exports.logout = async (req, res) => {
                 success: true,
                 message: "Log out",
             });
+        // console.log(req.cookies)
     }
     catch (error) {
         res.status(500).json({
