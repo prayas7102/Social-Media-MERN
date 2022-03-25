@@ -53,7 +53,7 @@ exports.login = async (req, res) => {
                 message: "Incorrect Password"
             });
         }
-        const token = await user.generateToken();
+        const token = await user.generateToken(user._id);
         const option = {
             expires: new Date(Date.now() + 24 * 60 * 60 * 60),
             httpOnly: true,
@@ -63,7 +63,6 @@ exports.login = async (req, res) => {
             user,
             token,
         });
-        // console.log(res.cookie)
     }
     catch (error) {
         res.status(500).json({
@@ -85,7 +84,6 @@ exports.logout = async (req, res) => {
                 success: true,
                 message: "Log out",
             });
-        // console.log(req.cookies)
     }
     catch (error) {
         res.status(500).json({
@@ -96,8 +94,9 @@ exports.logout = async (req, res) => {
 }
 
 exports.followUser = async (req, res) => {
+    
     try {
-        const followedUser = await User.findById(req.params._id);
+        const followedUser = await User.findById(req.params.id);
         const followingUser = await User.findById(req.user._id);
 
         if (!followedUser) {
@@ -106,13 +105,13 @@ exports.followUser = async (req, res) => {
                 message: "User not found",
             });
         }
-        if (followingUser.following.includes(followedUser._id)) {
-
+        if (followingUser.following.includes(followedUser.id)) {
+            
             const indexfollowing = followingUser.following.indexOf(followedUser._id)
-            const indexfollowers = followingUser.followers.indexOf(followingUser._id)
+            const indexfollowers = followedUser.followers.indexOf(followingUser._id)
 
-            indexfollowing.following.splice(indexfollowing, 1);
-            indexfollowers.followers.splice(indexfollowers, 1);
+            followingUser.following.splice(indexfollowing, 1);
+            followedUser.followers.splice(indexfollowers, 1);
 
             await followingUser.save();
             await followedUser.save();
@@ -123,7 +122,7 @@ exports.followUser = async (req, res) => {
             });
         }
         else {
-            followingUser.following.push(followedUser._id);
+            followingUser.following.push(followedUser.id);
             followedUser.followers.push(followingUser._id);
 
             await followingUser.save();
@@ -134,7 +133,6 @@ exports.followUser = async (req, res) => {
                 message: "User followed",
             });
         }
-
     }
     catch (error) {
         res.status(500).json({
