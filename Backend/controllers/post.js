@@ -12,10 +12,8 @@ exports.createPost = async (req, res) => {
         };
         const newPost = await Post.create(newPostData);
         const user = await User.findById(req.user._id);
-        
         user.posts.push(newPost._id);
         user.save();
-        // console.log(user,newPost)
         res.status(201).json({
             success: true,
             post: newPost
@@ -99,11 +97,11 @@ exports.deletePost = async (req, res) => {
 
 exports.getPost = async (req, res) => {
     try{
-        const user=await User.findById(req.user._id).populate("following","posts");
-        console.log(user)
+        const user=await User.findById(req.user._id)
+        const posts=await Post.find({owner:{$in:user.following}})
         return res.status(200).json({
             success: true,
-            following: user.following,
+            posts,
         });
     }
     catch (error) {
@@ -116,24 +114,31 @@ exports.getPost = async (req, res) => {
 
 exports.updateCaption = async (req, res) => {
         try{
-            const post=await Post.findById(req.params._id);
+            const post=await Post.findById(req.params.id);
             if(!post){
                 return res.status(400).json({
                     success: false,
                     message: "post not found",
+                    
                 });
             }
-            if(!post){
-                return res.status(400).json({
+            if(req.user._id.toString()===post.owner.toString()){
+                post.caption=req.body.caption;
+                await post.save();
+                return res.status(200).json({
+                    success: true,
+                    post
+                });
+            }
+            else{
+                return res.status(500).json({
                     success: false,
-                    message: "post not found",
+                    message: "unauthorized",
                 });
             }
-            post.caption=req.body.caption;
-            await post.save();
         }
         catch (error) {
-            res.status(500).json({
+            return res.status(500).json({
                 success: false,
                 message: error.message,
             });
@@ -194,7 +199,7 @@ exports.removeComment = async (req, res) => {
             });
         }
         if(post.owner.toString()===req.user._id.toString()){
-            if(req.body.commentId===undefined){
+            if(req.body.id===undefined){
                 return res.status(400).json({
                     success: false,
                     message: "Comment Id required",
@@ -215,7 +220,7 @@ exports.removeComment = async (req, res) => {
         }
     }
     catch (error) {
-        res.status(500).json({
+        return res.status(500).json({
             success: false,
             message: error.message,
         });

@@ -1,6 +1,6 @@
 const express = require("express")
 const { createPost, likeUnlike, deletePost,
-        getPost, addComment, removeComment } = require("../controllers/post");
+        getPost, addComment, removeComment, updateCaption } = require("../controllers/post");
 const { isAuthenticated } = require('../middleware/auth');
 const router = express.Router();
 
@@ -9,7 +9,7 @@ router.route("/post/upload").post(isAuthenticated, createPost);
 router.route("/post/:id")
     .get(isAuthenticated, likeUnlike)
     .delete(isAuthenticated, deletePost)
-    .put(isAuthenticated,deletePost)
+    .put(isAuthenticated,updateCaption)
 
 router.route("/posts").get(isAuthenticated, getPost);
 

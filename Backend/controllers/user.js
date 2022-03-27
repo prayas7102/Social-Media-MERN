@@ -46,7 +46,7 @@ exports.login = async (req, res) => {
                 message: "User does not exist"
             });
         }
-        const isMatch = await user.matchPassword(password,user.password);
+        const isMatch = await user.matchPassword(password, user.password);
         if (!isMatch) {
             return res.status(400).json({
                 success: false,
@@ -94,11 +94,10 @@ exports.logout = async (req, res) => {
 }
 
 exports.followUser = async (req, res) => {
-    
+
     try {
         const followedUser = await User.findById(req.params.id);
         const followingUser = await User.findById(req.user._id);
-
         if (!followedUser) {
             res.status(404).json({
                 success: false,
@@ -106,7 +105,7 @@ exports.followUser = async (req, res) => {
             });
         }
         if (followingUser.following.includes(followedUser.id)) {
-            
+
             const indexfollowing = followingUser.following.indexOf(followedUser._id)
             const indexfollowers = followedUser.followers.indexOf(followingUser._id)
 
@@ -157,6 +156,7 @@ exports.updateProfile = async (req, res) => {
         res.status(200).json({
             success: true,
             message: "User Updated",
+            user,
         });
     }
     catch (error) {
@@ -169,7 +169,7 @@ exports.updateProfile = async (req, res) => {
 
 exports.updatePassword = async (req, res) => {
     try {
-        const user = await User.findOne(req.user._id);
+        const user = await User.findOne(req.user._id).select("+password");
         const { oldPassword, newPassword } = req.body;
         if (!oldPassword || !newPassword) {
             return res.status(400).json({
@@ -177,7 +177,8 @@ exports.updatePassword = async (req, res) => {
                 message: "Please provide Old and New Password",
             });
         }
-        const isMatch = await User.matchPassword(oldPassword);
+        // console.log(user)
+        const isMatch = await user.matchPassword(oldPassword, user.password);
         if (!isMatch) {
             return res.status(400).json({
                 success: false,
@@ -186,6 +187,10 @@ exports.updatePassword = async (req, res) => {
         }
         user.password = newPassword;
         await user.save();
+        return res.status(200).json({
+            success: true,
+            message: "Password Updated",
+        });
     }
     catch (error) {
         res.status(500).json({
@@ -238,7 +243,6 @@ exports.deleteMyProfile = async (req, res) => {
 exports.MyProfile = async (req, res) => {
     try {
         const user = await User.findById(req.user._id);
-
         res.status(200).json({
             success: true,
             user,
@@ -299,7 +303,7 @@ exports.forgotPassword = async (req, res) => {
                 message: "user not found",
             });
         }
-        const resetPassword = user.getResetPasswordToken();
+        const resetPassword = await user.getResetPasswordToken(user);
         await user.save();
         const resetUrl = `${req.protocol}://${req.get("host")}/api/v1/password/reset/${resetPassword}`;
         const message = `Reset Your Password by clicking on link below: \n\n ${resetUrl}`;
@@ -312,6 +316,7 @@ exports.forgotPassword = async (req, res) => {
             res.status(200).json({
                 success: true,
                 message: `Email sent to ${user.email}`,
+                user
             });
         }
         catch (error) {
@@ -326,7 +331,7 @@ exports.forgotPassword = async (req, res) => {
 
     }
     catch (error) {
-       return res.status(500).json({
+        return res.status(500).json({
             success: false,
             message: error.message,
         });
@@ -335,28 +340,32 @@ exports.forgotPassword = async (req, res) => {
 
 exports.resetPassword = async (req, res) => {
     try {
-        const resetPasswordToken = crypto.createHash("abc").update(req.params.token).digest("hex");
-        const user = await User.findOne({ 
-            resetPasswordToken, 
-            resetPasswordExpire: { $gt: Date.now() } 
+        const resetPasswordToken = crypto
+            .createHmac('sha256', 'a secret')
+            .update(req.params.token)
+            .digest("hex");
+        const user1 = await User.findOne({ email: req.body.email })
+        const user = await User.findOne({
+            resetPasswordToken,
+            resetPasswordExpire: { $gt: Date.now() }
         });
-        if(!user){
-            res.status(401).json({
+        if (!user) {
+            return res.status(401).json({
                 success: false,
                 message: "invalid/expire token",
             });
         }
-        user.password=req.body.password;
+        user.password = req.body.password;
         user.resetPasswordToken = undefined;
         user.resetPasswordExpire = undefined;
         await user.save();
-        res.status(200).json({
+        return res.status(200).json({
             success: true,
             message: `Password updated`,
         });
     }
     catch (error) {
-        res.status(500).json({
+        return res.status(500).json({
             success: false,
             message: error.message,
         });

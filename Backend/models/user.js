@@ -48,13 +48,14 @@ userSchema.methods.generateToken = async (id) => {
     return jwt.sign({ _id: id }, process.env.JWT_SECRET)
 }
 
-userSchema.methods.getResetPasswordToken = async () => {
+userSchema.methods.getResetPasswordToken = async (user) => {
     const resetToken = crypto.randomBytes(20).toString("hex");
-    this.resetPasswordToken = crypto
-        .createHash("abc")
+    user.resetPasswordToken = crypto
+        .createHmac('sha256','a secret')
         .update(resetToken)
         .digest("hex");
-    this.resetPasswordExpire = Date.now() * 10 * 60 * 1000;
+    user.resetPasswordExpire = Date.now() * 10 * 60 * 1000;
+    await user.save();
     return resetToken;
 }
 
