@@ -199,17 +199,16 @@ exports.removeComment = async (req, res) => {
             });
         }
         if(post.owner.toString()===req.user._id.toString()){
-            if(req.body.id===undefined){
+            if(req.body.commentId===undefined){
                 return res.status(400).json({
                     success: false,
                     message: "Comment Id required",
                 });
             }
-        }
-        else{
+        }            
             post.comments.forEach((item,index)=>{
                 if(item.user.toString()===req.user._id.toString()){
-                    return post.comments.splice(index,1)
+                     post.comments.splice(index,1)
                 }
             });
             await post.save();
@@ -217,7 +216,6 @@ exports.removeComment = async (req, res) => {
                 success: true,
                 message: "Comment deleted",
             });
-        }
     }
     catch (error) {
         return res.status(500).json({
