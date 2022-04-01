@@ -2,6 +2,11 @@ import { configureStore } from "@reduxjs/toolkit"
 import { userReducer } from "./Reducers/User";
 const initialState = {}
 const store = configureStore( {
-    reducer: { user: userReducer }
-})
+    initialState,
+    reducer: 
+        { 
+            user: userReducer ,
+            postOfFollowing: postReducer
+        },
+});
 export default store;

@@ -13,8 +13,7 @@ export const LoginUser= (email,password) => async(dispatch)=>{
                 {
                     "Content-Type":"application/json",
                 },
-            },
-            );
+            });
         dispatch({
             type: "LoginSuccess",
             payload: data.user,
@@ -23,7 +22,26 @@ export const LoginUser= (email,password) => async(dispatch)=>{
     catch(error){
         dispatch({
             type: "LoginFailure",
-            payload: "error",
+            payload: error,
+        });
+    }
+}
+
+export const LoadUser= (email,password) => async(dispatch)=>{
+    try{
+        dispatch({
+            type:"LoadUserRequest"
+        });
+        const {data}=await axios.get("api/v1/me")
+        dispatch({
+            type: "LoadUserSuccess",
+            payload: data.user,
+        });
+    }
+    catch(error){
+        dispatch({
+            type: "LoadUserFailure",
+            payload: error,
         });
     }
 }
