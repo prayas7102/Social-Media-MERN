@@ -13,14 +13,17 @@ function Post({
   isDelete = false,
   isAccount = false,
 }) {
-  const [like,setLike]=useState(false)
-  const handleLike=()=>{
-      setLike(!like)
-  }
+  const [like, setLike] = useState(false);
+  const handleLike = () => {
+    setLike(!like);
+  };
   return (
     <div>
       <div>
+        <div>{isAccount ? <button>Morevert</button> : null}</div>
+        <img src={postImage} alt="Post" />
         <div>
+          {/*  avatar  */}
           <img src={ownerImage} alt="user" />
         </div>
         <Link to={`/user/${ownerId}`}>{ownername}</Link>

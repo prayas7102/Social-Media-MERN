@@ -1,17 +1,17 @@
 import axios from "axios";
 
-export const LoginUser= (email,password) => async(dispatch)=>{
-    try{
+export const LoginUser = (email, password) => async (dispatch) => {
+    try {
         dispatch({
-            type:"LoginRequest"
+            type: "LoginRequest"
         });
-        const {data}=await axios.post(
+        const { data } = await axios.post(
             "api/v1/login",
-            {email,password},
+            { email, password },
             {
                 headers:
                 {
-                    "Content-Type":"application/json",
+                    "Content-Type": "application/json",
                 },
             });
         dispatch({
@@ -19,7 +19,7 @@ export const LoginUser= (email,password) => async(dispatch)=>{
             payload: data.user,
         });
     }
-    catch(error){
+    catch (error) {
         dispatch({
             type: "LoginFailure",
             payload: error,
@@ -27,21 +27,32 @@ export const LoginUser= (email,password) => async(dispatch)=>{
     }
 }
 
-export const LoadUser= (email,password) => async(dispatch)=>{
-    try{
+export const LoadUser = (email, password) => async (dispatch) => {
+    try {
         dispatch({
-            type:"LoadUserRequest"
+            type: "LoadUserRequest"
         });
-        const {data}=await axios.get("api/v1/me")
+        const { data } = await axios.get("api/v1/me")
         dispatch({
             type: "LoadUserSuccess",
             payload: data.user,
         });
     }
-    catch(error){
+    catch (error) {
         dispatch({
             type: "LoadUserFailure",
             payload: error,
         });
+    }
+}
+
+export const getFollowingPosts = () => async (dispatch) => {
+    try {
+        dispatch({ type: "postRequest" });
+        const { data } = await axios.get("/api/v1/posts");
+        dispatch({ type: "postSuccess", payload: data.posts, })
+    }
+    catch (error) {
+        dispatch({ type: "postFailure", payload: error })
     }
 }

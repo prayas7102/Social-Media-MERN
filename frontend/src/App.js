@@ -12,10 +12,10 @@ function App() {
   useEffect(() => {
     dispatch(LoadUser());
   }, []);
-  const {auth}=useSelector((state)=>state.user);
+  const {isAuthenticated}=useSelector((state)=>state.user);
   return (
     <Router>
-      {auth && <Header />}
+      {isAuthenticated && <Header />}
       <Routes>
         <Route path="/" element={<Login />} />
       </Routes>
