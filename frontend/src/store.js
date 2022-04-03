@@ -1,12 +1,22 @@
-import { configureStore } from "@reduxjs/toolkit"
-import { userReducer ,postReducer} from "./Reducers/User";
-const initialState = {}
-const store = configureStore( {
-    initialState,
-    reducer: 
-        { 
-            user: userReducer ,
-            postOfFollowing: postReducer
-        },
+import { configureStore } from "@reduxjs/toolkit";
+import {
+  allUsersReducer,
+  postOfFollowingReducer,
+  userProfileReducer,
+  userReducer,
+} from "./Reducers/User";
+import { likeReducer, myPostsReducer, userPostsReducer } from "./Reducers/Post";
+
+const store = configureStore({
+  reducer: {
+    user: userReducer,
+    postOfFollowing: postOfFollowingReducer,
+    allUsers: allUsersReducer,
+    like: likeReducer,
+    myPosts: myPostsReducer,
+    userProfile: userProfileReducer,
+    userPosts: userPostsReducer,
+  },
 });
+
 export default store;
