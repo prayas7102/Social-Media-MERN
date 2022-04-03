@@ -1,48 +1,87 @@
 import React, { useEffect } from "react";
-import User from "../User/User";
 import Post from "../Post/Post";
-import Loader from "../Loader/Loader";
+import User from "../User/User";
+import "./Home.css";
 import { useDispatch, useSelector } from "react-redux";
-import { getFollowingPosts } from "../Actions/User";
+import { getAllUsers, getFollowingPosts } from "../../Actions/User";
+import Loader from "../Loader/Loader";
+import { Typography } from "@mui/material";
+import { useAlert } from "react-alert";
 
-function Home() {
+const Home = () => {
   const dispatch = useDispatch();
-  const { loading, posts, error } = useSelector((state) => state.postReducer);
+  const alert = useAlert();
+
+  const { loading, posts, error } = useSelector(
+    (state) => state.postOfFollowing
+  );
+
+  const { users, loading: usersLoading } = useSelector(
+    (state) => state.allUsers
+  );
+
+  const { error: likeError, message } = useSelector((state) => state.like);
+
   useEffect(() => {
     dispatch(getFollowingPosts());
-  }, []);
+    dispatch(getAllUsers());
+  }, [dispatch]);
 
-  return loading ? (
+  useEffect(() => {
+    if (error) {
+      alert.error(error);
+      dispatch({ type: "clearErrors" });
+    }
+
+    if (likeError) {
+      alert.error(likeError);
+      dispatch({ type: "clearErrors" });
+    }
+    if (message) {
+      alert.success(message);
+      dispatch({ type: "clearMessage" });
+    }
+  }, [alert, error, message, likeError, dispatch]);
+
+  return loading === true || usersLoading === true ? (
     <Loader />
   ) : (
-    <div>
-      <div>
+    <div className="home">
+      <div className="homeleft">
         {posts && posts.length > 0 ? (
           posts.map((post) => (
             <Post
               key={post._id}
-              postImage={post.caption}
-              ownername={post.owner.name}
-              ownerImage={post.owner.avatar.url}
-              ownerId={post.owner._id}
+              postId={post._id}
               caption={post.caption}
+              postImage={post.image.url}
               likes={post.likes}
               comments={post.comments}
+              ownerImage={post.owner.avatar.url}
+              ownerName={post.owner.name}
+              ownerId={post.owner._id}
             />
           ))
         ) : (
-          <div>No post</div>
+          <Typography variant="h6">No posts yet</Typography>
         )}
       </div>
-      <div>
-        <User
-          userId="{user._id}"
-          name="{user.name}"
-          avatar="{user.avatar.url}"
-        />
+      <div className="homeright">
+        {users && users.length > 0 ? (
+          users.map((user) => (
+            <User
+              key={user._id}
+              userId={user._id}
+              name={user.name}
+              avatar={user.avatar.url}
+            />
+          ))
+        ) : (
+          <Typography>No Users Yet</Typography>
+        )}
       </div>
     </div>
   );
-}
+};
 
 export default Home;
