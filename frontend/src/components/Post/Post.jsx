@@ -1,5 +1,10 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
+import { likePost } from "../Actions/Post";
+import {useAlert} from "react-alert";
+import { userReducer } from "../../Reducers/User";
+import { getFollowingPosts } from "../Actions/User";
 
 function Post({
   postId,
@@ -14,9 +19,32 @@ function Post({
   isAccount = false,
 }) {
   const [like, setLike] = useState(false);
+  const {error,message}=useSelector((state)=>state.like);
+  const {user}=useSelector((state)=>state.user);
+  const dispatch=useDispatch();
+  const alert=useAlert();
+
   const handleLike = () => {
     setLike(!like);
+    dispatch(likePost(postId))
+    dispatch(getFollowingPosts())
   };
+
+  useEffect(()=>{
+    likes.forEach((item)=>{
+      if(item._id===user._id) setLike(true)
+    })
+  },[likes,user._id])
+
+  useEffect(()=>{
+    if(error){
+      alert.error(error)
+    }
+    if(message){
+      alert.error(message)
+    }
+  },[alert,error,message])
+
   return (
     <div>
       <div>

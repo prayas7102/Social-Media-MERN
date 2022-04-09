@@ -3,16 +3,42 @@ import User from "../User/User";
 import Post from "../Post/Post";
 import Loader from "../Loader/Loader";
 import { useDispatch, useSelector } from "react-redux";
-import { getFollowingPosts } from "../Actions/User";
+import { getAllUsers, getFollowingPosts } from "../Actions/User";
+import {useAlert} from "react-alert";
 
 function Home() {
   const dispatch = useDispatch();
-  const { loading, posts, error } = useSelector((state) => state.postReducer);
+  const alert=useAlert();
+  const { loading, posts, error } = useSelector(
+    (state) => state.postOfFollowing
+  );
+  const { users, loading: userLoading } = useSelector(
+    (state) => state.allUsers
+  );
+
+  const {error:likeError,message}=useSelector((state)=>state.like);
+
   useEffect(() => {
     dispatch(getFollowingPosts());
-  }, []);
+    dispatch(getAllUsers());
+  }, [dispatch]);
+  
+  useEffect(()=>{
+    if(error){
+      alert.error(error);
+      dispatch({type:"clearErrors"});
+    }
+    if(likeError){
+      alert.error(message)
+      dispatch({type:"clearErrors"})
+    }
+    if(message){
+      alert.success(message)
+      dispatch({type:"clearMessage"})
+    }
+  },[alert,error,message])
 
-  return loading ? (
+  return loading || userLoading ? (
     <Loader />
   ) : (
     <div>
@@ -21,7 +47,7 @@ function Home() {
           posts.map((post) => (
             <Post
               key={post._id}
-              postImage={post.caption}
+              postImage={post.image.url}
               ownername={post.owner.name}
               ownerImage={post.owner.avatar.url}
               ownerId={post.owner._id}
@@ -35,11 +61,17 @@ function Home() {
         )}
       </div>
       <div>
-        <User
-          userId="{user._id}"
-          name="{user.name}"
-          avatar="{user.avatar.url}"
-        />
+        {users && users.length > 0 ? (
+          users.map((user) => {
+            <User
+              userId={user._id}
+              name={user.name}
+              avatar={user.avatar.url}
+            />;
+          })
+        ) : (
+          <div>No Users</div>
+        )}
       </div>
     </div>
   );

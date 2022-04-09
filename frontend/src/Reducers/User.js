@@ -1,5 +1,6 @@
 import { createReducer } from "@reduxjs/toolkit";
 const initialState = {}
+
 export const userReducer = createReducer(initialState, {
     loginRequest: (state) => {
         state.loading = true;
@@ -60,4 +61,19 @@ export const postReducer = createReducer(initialState, {
     },
 })
 
-
+export const allUsersReducer = createReducer(initialState, {
+    allUsersRequest: (state) => {
+        state.loading = true;
+    },
+    allUsersSuccess: (state, action) => {
+        state.loading = false;
+        state.users = action.payload;
+    },
+    allUsersFailure: (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+    },
+    clearError: (state) => {
+        state.error = null;
+    },
+})

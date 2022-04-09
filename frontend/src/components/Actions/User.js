@@ -56,3 +56,14 @@ export const getFollowingPosts = () => async (dispatch) => {
         dispatch({ type: "postFailure", payload: error })
     }
 }
+
+export const getAllUsers = () => async (dispatch) => {
+    try {
+        dispatch({ type: "allUsersRequest" });
+        const { data } = await axios.get("/api/v1/users");
+        dispatch({ type: "allUsersSuccess", payload: data.users, })
+    }
+    catch (error) {
+        dispatch({ type: "allUsersFailure", payload: error })
+    }
+}

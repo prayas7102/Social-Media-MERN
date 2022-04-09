@@ -98,7 +98,14 @@ exports.deletePost = async (req, res) => {
 exports.getPost = async (req, res) => {
     try{
         const user=await User.findById(req.user._id)
-        const posts=await Post.find({owner:{$in:user.following}})
+        const posts=await Post.find(
+            {
+                owner:
+                {
+                    $in:user.following
+                }
+            }
+        ).populate("owner likes comments.user");
         return res.status(200).json({
             success: true,
             posts:posts.reverse(),
