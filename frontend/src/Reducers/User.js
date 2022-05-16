@@ -1,7 +1,8 @@
 import { createReducer } from "@reduxjs/toolkit";
 const initialState = {}
 
-export const userReducer = createReducer(initialState, {
+export const userReducer = createReducer(
+    initialState, {
     loginRequest: (state) => {
         state.loading = true;
     },

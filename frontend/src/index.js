@@ -4,11 +4,11 @@ import './index.css';
 import App from './App';
 import { Provider } from "react-redux"
 import store from "./store"
-import {Provider as AlertProvider,postions,transitions} from "react-alert";
+import {Provider as AlertProvider,positions,transitions} from "react-alert";
 import AlertTemplate from "react-alert-template-basic";
 
 const options={
-  postion:postions.BOTTOM_CENTER,
+  postion:positions.BOTTOM_CENTER,
   timeout: 5000,
   transition:transitions.SCALE,
 };

@@ -1,21 +1,21 @@
 import { useEffect } from 'react';
 import './App.css';
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import Header from "./components/header/Header.jsx";
+import Header from "./Components/Header/Header.jsx";
 import { useDispatch, useSelector } from 'react-redux';
-import Login from "./components/login/login";
-import { LoadUser } from './components/Actions/User';
-import Home from "./components/Home/Home"
+import Login from "./Components/login/login";
+import { LoadUser } from './Actions/User';
+import Home from "./Components/Home/Home"
 
 function App() {
-  const dispatch=useDispatch();
+  const dispatch = useDispatch();
   useEffect(() => {
     dispatch(LoadUser());
   }, []);
-  const {isAuthenticated}=useSelector((state)=>state.user);
+  const { isAuthenticated } = useSelector((state) => state.user);
   return (
     <Router>
-      {isAuthenticated && <Header />}
+      { <Header />}
       <Routes>
         <Route path="/" element={<Login />} />
       </Routes>

@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
-import { likePost } from "../Actions/Post";
+import { likePost } from "../../Actions/Post";
 import {useAlert} from "react-alert";
 import { userReducer } from "../../Reducers/User";
-import { getFollowingPosts } from "../Actions/User";
+import { getFollowingPosts } from "../../Actions/User";
 
 function Post({
   postId,

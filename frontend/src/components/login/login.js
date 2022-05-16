@@ -1,15 +1,15 @@
 import React, { useState } from 'react'
 import { Link } from "react-router-dom";
-import {useDispatch} from "react-redux";
-import {LoginUser} from "../Actions/User";
+import { useDispatch } from "react-redux";
+import { LoginUser } from "../../Actions/User";
 
 function Login() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
-    const dispatch=useDispatch();
+    const dispatch = useDispatch();
     const handleLogin = (e) => {
         e.preventDefault();
-        dispatch(LoginUser(email,password))
+        dispatch(LoginUser(email, password))
     }
     return (
         <div>

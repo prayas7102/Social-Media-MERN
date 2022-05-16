@@ -2,6 +2,7 @@ const User = require("../models/User");
 const Post = require("../models/Post");
 const crypto = require("crypto");
 const { sendEmail } = require("../middleware/sendMail");
+
 exports.register = async (req, res) => {
     try {
         const { name, email, password } = req.body;

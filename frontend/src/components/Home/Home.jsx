@@ -3,7 +3,7 @@ import User from "../User/User";
 import Post from "../Post/Post";
 import Loader from "../Loader/Loader";
 import { useDispatch, useSelector } from "react-redux";
-import { getAllUsers, getFollowingPosts } from "../Actions/User";
+import { getAllUsers, getFollowingPosts } from "../../Actions/User";
 import {useAlert} from "react-alert";
 
 function Home() {
