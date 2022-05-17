@@ -30,6 +30,7 @@ export const userReducer = createReducer(
         state.error = action.payload;
         state.isAuthenticated = false;
     },
+    
     LoadUserRequest: (state) => {
         state.loading = true;
     },

@@ -15,9 +15,9 @@ function App() {
   const { isAuthenticated } = useSelector((state) => state.user);
   return (
     <Router>
-      { <Header />}
+      { isAuthenticated && <Header />}
       <Routes>
-        <Route path="/" element={<Login />} />
+        <Route path="/" element={!isAuthenticated ? <Home/> :<Login />} />
       </Routes>
     </Router>
 
