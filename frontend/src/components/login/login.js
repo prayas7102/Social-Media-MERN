@@ -33,7 +33,7 @@ function Login() {
                     onChange={(e) => { setPassword(e.target.value) }}
                 />
                 <Link to="/forgot/password">
-                    <Typography><h3>Forgot Password</h3></Typography>
+                    <h3><Typography>Forgot Password</Typography></h3>
                 </Link>
                 <Button type='submit'>LOGIN</Button>
             </form>

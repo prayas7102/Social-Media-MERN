@@ -32,7 +32,7 @@ export const LoadUser = (email, password) => async (dispatch) => {
         dispatch({
             type: "LoadUserRequest"
         });
-        const { data } = await axios.get("api/v1/myProfile")
+        const { data } = await axios.get("/api/v1/MyProfile")
         dispatch({
             type: "LoadUserSuccess",
             payload: data.user,

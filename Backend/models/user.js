@@ -7,6 +7,10 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: [true, "please enter value"],
     },
+    avatar: {
+        public_id: String,
+        url: String,
+    },
     email: {
         type: String,
         required: [true, "please enter value"],
@@ -51,7 +55,7 @@ userSchema.methods.generateToken = async (id) => {
 userSchema.methods.getResetPasswordToken = async (user) => {
     const resetToken = crypto.randomBytes(20).toString("hex");
     user.resetPasswordToken = crypto
-        .createHmac('sha256','a secret')
+        .createHmac('sha256', 'a secret')
         .update(resetToken)
         .digest("hex");
     user.resetPasswordExpire = Date.now() * 10 * 60 * 1000;
