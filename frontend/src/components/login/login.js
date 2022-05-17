@@ -1,8 +1,9 @@
 import React, { useState } from 'react'
 import { Link } from "react-router-dom";
 import { useDispatch } from "react-redux";
+import { Typography, Button } from "@mui/material";
 import { LoginUser } from "../../Actions/User";
-
+import "./Login.css";
 function Login() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
@@ -12,14 +13,13 @@ function Login() {
         dispatch(LoginUser(email, password))
     }
     return (
-        <div>
-            <form onSubmit={handleLogin}>
-                <h3>Media Block</h3>
+        <div className='login'>
+            <form onSubmit={handleLogin} className='loginForm'>
+                <Typography variant="h3">Media Block</Typography>
                 <input
                     type="email"
                     name=""
                     value={email}
-                    id=""
                     placeholder='Email'
                     required
                     onChange={(e) => { setEmail(e.target.value) }}
@@ -28,15 +28,14 @@ function Login() {
                     type="password"
                     name=""
                     value={password}
-                    id=""
                     placeholder='Password'
                     required
                     onChange={(e) => { setPassword(e.target.value) }}
                 />
                 <Link to="/forgot/password">
-                    Forgot Password
+                    <Typography><h3>Forgot Password</h3></Typography>
                 </Link>
-                <button>LOGIN</button>
+                <Button type='submit'>LOGIN</Button>
             </form>
         </div>
     )
