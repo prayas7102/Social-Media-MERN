@@ -6,4 +6,7 @@ exports.databaseConnect = () => {
         // useFindAndModify: true,
         // useUnifiedTopology: true,
     })
+    .then(()=>{
+        console.log("Database connected");
+    })
 }

@@ -1,15 +1,15 @@
 const express = require('express');
 var cors = require('cors')
-const {databaseConnect}= require('./config/database');
-const cookieParser=require("cookie-parser");
+const { databaseConnect } = require('./config/database');
+const cookieParser = require("cookie-parser");
 const post = require("./routes/post");
 const user = require("./routes/user");
 const app = express();
 databaseConnect();
 if (process.env.NODE_ENV !== "production") {
     require("dotenv").config(
-        { 
-            path: 'config/config.env' 
+        {
+            path: 'Backend/config/config.env'
         }
     )
 }
