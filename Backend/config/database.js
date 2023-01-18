@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 exports.databaseConnect = () => {
-    mongoose.connect("mongodb://localhost:27017/socialmedia", {
+    mongoose.connect(process.env.MONGO_URI, {
         // useNewUrlParser: true,
         // useCreateIndex: true,
         // useFindAndModify: true,
