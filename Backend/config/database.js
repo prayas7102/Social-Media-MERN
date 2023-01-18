@@ -7,6 +7,6 @@ exports.databaseConnect = () => {
         // useUnifiedTopology: true,
     })
     .then(()=>{
-        console.log("Database connected");
+        console.log(`Database connected`);
     })
 }

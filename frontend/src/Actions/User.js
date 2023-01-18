@@ -1,12 +1,14 @@
 import axios from "axios";
 
+const mainUrl = "http://localhost:4000";
 export const LoginUser = (email, password) => async (dispatch) => {
     try {
+        console.log(email, password)
         dispatch({
             type: "LoginRequest"
         });
         const { data } = await axios.post(
-            "/api/v1/login",
+            `${mainUrl}/api/v1/login`,
             { email, password },
             {
                 headers:
@@ -14,6 +16,7 @@ export const LoginUser = (email, password) => async (dispatch) => {
                     "Content-Type": "application/json",
                 },
             });
+        console.log(data.user)
         dispatch({
             type: "LoginSuccess",
             payload: data.user,
@@ -32,7 +35,7 @@ export const LoadUser = (email, password) => async (dispatch) => {
         dispatch({
             type: "LoadUserRequest"
         });
-        const { data } = await axios.get("/api/v1/MyProfile")
+        const { data } = await axios.get(`${mainUrl}/api/v1/MyProfile`)
         dispatch({
             type: "LoadUserSuccess",
             payload: data.user,
@@ -49,7 +52,7 @@ export const LoadUser = (email, password) => async (dispatch) => {
 export const getFollowingPosts = () => async (dispatch) => {
     try {
         dispatch({ type: "postRequest" });
-        const { data } = await axios.get("/api/v1/posts");
+        const { data } = await axios.get(`${mainUrl}/api/v1/posts`);
         dispatch({ type: "postSuccess", payload: data.posts, })
     }
     catch (error) {
@@ -60,7 +63,7 @@ export const getFollowingPosts = () => async (dispatch) => {
 export const getAllUsers = () => async (dispatch) => {
     try {
         dispatch({ type: "allUsersRequest" });
-        const { data } = await axios.get("/api/v1/users");
+        const { data } = await axios.get(`${mainUrl}/api/v1/users`);
         dispatch({ type: "allUsersSuccess", payload: data.users, })
     }
     catch (error) {

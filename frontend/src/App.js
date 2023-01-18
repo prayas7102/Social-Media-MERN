@@ -9,10 +9,11 @@ import Home from "./Components/Home/Home"
 
 function App() {
   const dispatch = useDispatch();
+  const { isAuthenticated } = useSelector((state) => state.user);
   useEffect(() => {
     dispatch(LoadUser());
-  }, []);
-  const { isAuthenticated } = useSelector((state) => state.user);
+  }, [dispatch]);
+  console.log(isAuthenticated)
   return (
     <Router>
       {isAuthenticated && <Header />}

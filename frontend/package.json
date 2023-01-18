@@ -2,6 +2,7 @@
   "name": "frontend",
   "version": "0.1.0",
   "private": true,
+  "proxy": "http://localhost:4000",
   "dependencies": {
     "@emotion/react": "^11.9.0",
     "@emotion/styled": "^11.8.1",
@@ -43,6 +44,5 @@
   "devDependencies": {
     "autoprefixer": "^10.4.4",
     "postcss": "^8.4.12"
-  },
-  "proxy": "http://localhost:4000"
+  }
 }
