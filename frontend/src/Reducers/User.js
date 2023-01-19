@@ -3,15 +3,15 @@ const initialState = { isAuthenticated: false }
 
 export const userReducer = createReducer(
     initialState, {
-    loginRequest: (state) => {
+    LoginRequest: (state) => {
         state.loading = true;
     },
-    loginSuccess: (state, action) => {
+    LoginSuccess: (state, action) => {
         state.loading = false;
         state.user = action.payload;
         state.isAuthenticated = true;
     },
-    loginFailure: (state, action) => {
+    LoginFailure: (state, action) => {
         state.loading = false;
         state.error = action.payload;
         state.isAuthenticated = false;
