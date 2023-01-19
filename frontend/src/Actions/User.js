@@ -53,6 +53,7 @@ export const getFollowingPosts = () => async (dispatch) => {
     try {
         dispatch({ type: "postRequest" });
         const { data } = await axios.get(`${mainUrl}/api/v1/posts`);
+        console.log(data)
         dispatch({ type: "postSuccess", payload: data.posts, })
     }
     catch (error) {

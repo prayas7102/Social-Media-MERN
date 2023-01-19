@@ -61,11 +61,8 @@ exports.login = async (req, res) => {
             expires: new Date(Date.now() + 24 * 60 * 60 * 60),
             httpOnly: true,
         }
-        res.status(200).cookie("token", token, option).json({
-            success: true,
-            user,
-            token,
-        });
+        res.cookie('token', token, option);
+        res.status(200).send({ success: true, user, token: token });
     }
     catch (error) {
         res.status(500).json({

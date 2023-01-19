@@ -24,6 +24,7 @@
   
   .postDetails {
     display: flex;
+    flex-direction: row;
     padding: 1vmax;
   }
   

@@ -32,6 +32,9 @@ function Login() {
                     required
                     onChange={(e) => { setPassword(e.target.value) }}
                 />
+                <Link to="/register">
+                    <h3><Typography>New User</Typography></h3>
+                </Link>
                 <Link to="/forgot/password">
                     <h3><Typography>Forgot Password</Typography></h3>
                 </Link>

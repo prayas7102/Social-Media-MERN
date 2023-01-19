@@ -5,6 +5,14 @@ import { likePost } from "../../Actions/Post";
 import { useAlert } from "react-alert";
 import { userReducer } from "../../Reducers/User";
 import { getFollowingPosts } from "../../Actions/User";
+import {
+  MoreVert,
+  Favorite,
+  FavoriteBorder,
+  ChatBubbleOutline,
+  DeleteOutline,
+} from "@mui/icons-material";
+import { Avatar, Typography, Button } from "@mui/material";
 
 function Post({
   postId,
@@ -12,7 +20,7 @@ function Post({
   postImage,
   likes = [],
   comments = [],
-  ownerImage,
+  ownerImage = "https://images.unsplash.com/photo-1661961112835-ca6f5811d2af?ixlib=rb-4.0.3&ixid=MnwxMjA3fDF8MHxlZGl0b3JpYWwtZmVlZHw2fHx8ZW58MHx8fHw%3D&auto=format&fit=crop&w=600&q=60",
   ownername,
   ownerId,
   isDelete = false,
@@ -48,19 +56,28 @@ function Post({
   return (
     <div className="post">
       <div className="postHeader">
-        {isAccount ? <button>Morevert</button> : null}
+        {isAccount ? <Button><MoreVert /></Button> : null}
       </div>
       <img src={postImage} alt="Post" />
       <div className="postDetails">
-        {/*  avatar  */}
-        <img src={ownerImage} alt="userimage" />
-        <Link to={`/user/${ownerId}`}>{ownername}</Link>
-        <div className="">{caption}</div>
+        <Avatar src={ownerImage} alt="userimage" sx={{ height: "3vmax", width: "3vmax" }} />
+        <Link to={`/user/${ownerId}`}>
+          <Typography fontWeight={700}>{ownername}</Typography>
+        </Link>
+        <Typography
+          fontWeight={100}
+          color="rgba(0, 0, 0, 0.582)"
+          style={{ alignSelf: "center" }}
+        >
+          {caption}
+        </Typography>
       </div>
-      <div className="">
-        <button>heart</button>
-        <button>chat</button>
-        <button>delete</button>
+      <div className="postFooter">
+        <Button onClick={handleLike}>
+          {like ? <Favorite style={{ color: "red" }} /> : <FavoriteBorder />}
+        </Button>
+        <Button><ChatBubbleOutline /></Button>
+        {isDelete?<Button><DeleteOutline /></Button>:null}
       </div>
     </div>
   );

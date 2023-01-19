@@ -6,7 +6,7 @@ import { Typography, Button } from "@mui/material";
 function User({ userId, name, avatar }) {
   return (
     <Link to={`/user/${userId}`} className="homeUser">
-      <img src="" alt="" />
+      <img src={avatar} alt="{name}" />
       <Typography>
         {name}
       </Typography>

@@ -7,15 +7,25 @@ import { getAllUsers, getFollowingPosts } from "../../Actions/User";
 import { useAlert } from "react-alert";
 import "./Home.css";
 function Home() {
+
+  const dispatch = useDispatch();
+  const alert = useAlert();
+
+  const { loading, posts, error } = useSelector(
+    (state) => state.postOfFollowing
+  );
+  
+  useEffect(() => {
+    dispatch(getFollowingPosts());
+  }, []);
+  
   return (
     <div className="home">
       <div className="homeleft">
         <Post
           ownername={"prayas"}
           caption={"ksmxm"}
-          postImage={
-            "https://www.google.com/imgres?imgurl=https%3A%2F%2Fcdn.pixabay.com%2Fphoto%2F2015%2F04%2F23%2F22%2F00%2Ftree-736885__480.jpg&imgrefurl=https%3A%2F%2Fpixabay.com%2Fimages%2Fsearch%2Fnature%2F&tbnid=DH7p1w2o_fIU8M&vet=12ahUKEwiomKyJxOb3AhWz_DgGHZcxD4sQMygBegUIARCzAQ..i&docid=Ba_eiczVaD9-zM&w=771&h=480&q=image&ved=2ahUKEwiomKyJxOb3AhWz_DgGHZcxD4sQMygBegUIARCzAQ"
-          }
+          postImage={"https://images.unsplash.com/photo-1661961112835-ca6f5811d2af?ixlib=rb-4.0.3&ixid=MnwxMjA3fDF8MHxlZGl0b3JpYWwtZmVlZHw2fHx8ZW58MHx8fHw%3D&auto=format&fit=crop&w=600&q=60"}
         />
       </div>
       <div className="homeright">
@@ -23,7 +33,7 @@ function Home() {
           userId={User._id}
           name={"name"}
           avatar={
-            "https://www.google.com/url?sa=i&url=https%3A%2F%2Fin.linkedin.com%2Fpub%2Fdir%2FPrayas%2FKumar%2Fin-0-India&psig=AOvVaw1nrLQyfSYhCODQZUnJ-R4k&ust=1652871624640000&source=images&cd=vfe&ved=0CAwQjRxqFwoTCOCX2-Cw5vcCFQAAAAAdAAAAABAD" ||
+            "https://images.unsplash.com/photo-1661961112835-ca6f5811d2af?ixlib=rb-4.0.3&ixid=MnwxMjA3fDF8MHxlZGl0b3JpYWwtZmVlZHw2fHx8ZW58MHx8fHw%3D&auto=format&fit=crop&w=600&q=60" ||
             User.avatar.url
           }
         />
